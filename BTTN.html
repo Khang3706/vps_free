@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc nghiệm Đại số quan hệ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-color: #6c757d;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark-color);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 2px;
+        }
+        
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .mode-btn {
+            padding: 15px 30px;
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mode-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .mode-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .mode-btn i {
+            font-size: 18px;
+        }
+        
+        .chapter-selector {
+            display: none;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            pointer-events: none;
+        }
+        
+        select {
+            padding: 12px 20px;
+            width: 300px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--primary-color);
+            font-size: 16px;
+            appearance: none;
+            background-color: white;
+            color: var(--dark-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .quiz-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .question {
+            background-color: white;
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin-bottom: 25px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .question::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary-color), var(--accent-color));
+        }
+        
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: var(--dark-color);
+            line-height: 1.5;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option {
+            padding: 15px;
+            background-color: white;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .option:hover {
+            background-color: #f8f9fa;
+            border-color: var(--primary-color);
+        }
+        
+        .option.selected {
+            background-color: #e7f0ff;
+            border-color: var(--primary-color);
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .option.correct {
+            background-color: #e6f7ee;
+            border-color: #28a745;
+            color: #28a745;
+        }
+        
+        .option.incorrect {
+            background-color: #fdecea;
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+        }
+        
+        .option-radio {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #adb5bd;
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .selected .option-radio {
+            border-color: var(--primary-color);
+            background-color: var(--primary-color);
+        }
+        
+        .correct .option-radio {
+            border-color: #28a745;
+            background-color: #28a745;
+        }
+        
+        .incorrect .option-radio {
+            border-color: var(--danger-color);
+            background-color: var(--danger-color);
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .nav-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .nav-btn:disabled {
+            background-color: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .progress-container {
+            margin-top: 25px;
+            background-color: #e9ecef;
+            border-radius: var(--border-radius);
+            height: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: var(--border-radius);
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: 600;
+            color: var(--gray-color);
+        }
+        
+        .result {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .result-score {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 15px 0;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .result-message {
+            font-size: 16px;
+            color: var(--gray-color);
+            margin-bottom: 15px;
+        }
+        
+        .restart-btn {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: var(--transition);
+            margin-top: 15px;
+        }
+        
+        .restart-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        
+        .explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            border-left: 4px solid var(--accent-color);
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .explanation-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .timer {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .mode-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .mode-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-graduation-cap"></i> Trắc nghiệm Đại số quan hệ</h1>
+        
+        <div class="mode-selector">
+            <button class="mode-btn" id="chapterMode">
+                <i class="fas fa-book-open"></i> Ôn theo chương
+            </button>
+            <button class="mode-btn" id="randomMode">
+                <i class="fas fa-random"></i> Ôn 40 câu ngẫu nhiên
+            </button>
+        </div>
+        
+        <div class="chapter-selector" id="chapterSelector">
+            <div class="select-wrapper">
+                <select id="chapterSelect">
+                    <option value="">-- Chọn chương --</option>
+                    <option value="1">Chương 1: Giới thiệu</option>
+                    <option value="2">Chương 2: Đại số quan hệ cơ bản</option>
+                    <option value="3">Chương 3: Phép toán nâng cao</option>
+                    <option value="4">Chương 4: Ứng dụng</option>
+                </select>
+            </div>
+            <button class="mode-btn" id="startChapterBtn">
+                <i class="fas fa-play"></i> Bắt đầu
+            </button>
+        </div>
+        
+        <div class="quiz-container" id="quizContainer">
+            <div class="timer" id="timer">
+                <i class="far fa-clock"></i> Thời gian: <span id="timeDisplay">00:00</span>
+            </div>
+            
+            <div class="question">
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="explanation" id="explanation">
+                    <div class="explanation-title">
+                        <i class="fas fa-lightbulb"></i> Giải thích
+                    </div>
+                    <div id="explanationText"></div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-btn" id="prevBtn" disabled>
+                    <i class="fas fa-arrow-left"></i> Trước
+                </button>
+                <button class="nav-btn" id="nextBtn">
+                    Tiếp <i class="fas fa-arrow-right"></i>
+                </button>
+                <button class="nav-btn" id="submitBtn" style="display: none;">
+                    <i class="fas fa-paper-plane"></i> Nộp bài
+                </button>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText"></div>
+            
+            <div class="result" id="result">
+                <div class="result-title">Kết quả bài kiểm tra</div>
+                <div class="result-score" id="resultScore"></div>
+                <div class="result-message" id="resultMessage"></div>
+                <button class="restart-btn" id="restartBtn">
+                    <i class="fas fa-redo"></i> Làm lại
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database of questions organized by chapters
+        const questionsDatabase = {
+            "1": [
+//1
+    {
+    question: " Hãy chọn từ/cụm từ tương ứng để hoàn thiện khẳng định sau: Từ các phép toán đại số quan hệ, một câu truy vấn có thể được biểu diễn bởi",
+    options: [
+            "Một biểu thức đại số quan hệ",
+            "Một cây quan hệ",
+            "Biểu thức quan hệ và một cây phép toán quan hệ",
+            "Biểu thức quan hệ hay một cây quan hệ"
+        ],
+        correctAnswer: 0,
+        explanation: "Một câu truy vấn có thể được biểu diễn bằng cả biểu thức đại số quan hệ hoặc cây quan hệ, đây là hai cách biểu diễn tương đương."
+    },
+//2    
+    {
+        question: "Hãy chọn từ/cụm từ tương ứng để hoàn thiện khẳng định sau: Toán hạng trong các phép đại số quan hệ là các......",
+        options: [
+            "Các biểu thức toán học",
+            "Quan hệ hoặc các biểu thức đại số quan hệ",
+            "Đảm bảo tính nhất quán dữ liệu",
+            "Đảm bảo cho việc lưu trữ dữ liệu"
+        ],
+        correctAnswer: 1,
+        explanation: "Toán hạng trong các phép đại số quan hệ có thể là các quan hệ hoặc các biểu thức đại số quan hệ."
+    },
+//3    
+    {
+        question: "Quá trình tối ưu hoá các câu hỏi truy vấn dữ liệu là?",
+        options: [
+            "Kết quả của các phép toán được biểu diễn duy nhất bằng một quan hệ",
+            "Cần thiết phải biến đổi các câu hỏi hợp lý",
+            "Biến đổi câu hỏi sao cho chi phí thời gian và sử dụng bộ nhớ là ít nhất",
+            "Giảm chi phí thời gian thực hiện các phép toán còn ít nhất"
+        ],
+        correctAnswer: 2,
+        explanation: "Quá trình tối ưu hoá các câu hỏi truy vấn dữ liệu nhằm biến đổi câu hỏi sao cho chi phí thời gian và sử dụng bộ nhớ là ít nhất."
+    },
+//4    
+    {
+        question: "Chọn một khẳng định nào sau đây là đúng nhất khi nói về phép UNION:",
+        options: [
+            "Thuộc tính của quan hệ hợp là hợp các thuộc tính của các quan hệ nguồn",
+            "Các bộ của quan hệ hợp là hợp các bộ của các quan hệ nguồn",
+            "Hợp của 2 quan hệ khả hợp là một quan hệ khả hợp với các quan hệ nguồn.",
+            "Hợp của 2 quan hệ là một quan hệ."
+        ],
+        correctAnswer: 2,
+        explanation: "Hợp của 2 quan hệ khả hợp là một quan hệ khả hợp với các quan hệ nguồn."
+    },
+//5
+    {
+        question: "Chọn một khẳng định nào sau đây là đúng nhất nhận xét khi thực hiện tối ưu hoá câu hỏi.",
+        options: [
+            "Thực hiện các phép chọn muộn hơn các phép chiếu thường thì tốt hơn",
+            "Phép chiếu sớm giảm việc tăng số các thuộc tính.",
+            "Các phép chọn sớm sẽ làm tăng dữ liệu",
+            "Thực hiện các phép chọn càng sớm không tốt hơn"
+        ],
+        correctAnswer: 1,
+        explanation: "Phép chiếu sớm giảm việc tăng số các thuộc tính."
+    },
+//6
+    {
+        question: "Hãy chọn từ/cụm từ tương ứng để hoàn thiện khẳng định sau: Trong biểu thức đại số quan hệ các toán hạng là…….",
+        options: [
+            "Các phần tử",
+            "Các phụ thuộc hàm",
+            "Các thuộc tính",
+            "Các quan hệ trong một CSDL"
+        ],
+        correctAnswer: 3,
+        explanation: "Trong biểu thức đại số quan hệ, các toán hạng là các quan hệ trong một CSDL."
+    },
+//7
+    {
+        question: "tKhẳng định nào sau đây là chính xác nhất:",
+        options: [
+            "Giao của hai quan hệ R và S , được ký hiệu là R ∩ S , cho kết quả là một quan hệ chứa tất cả các bộ có trong quan hệ R",
+            "Giao của hai quan hệ R và S , được ký hiệu là R ∩ S , cho kết quả là một quan hệ chứa tất cả các bộ có trong cả hai quan hệ R và S",
+            "Giao của hai quan hệ R và S , được ký hiệu là R ∩ S , cho kết quả là một quan hệ chứa tất cả các bộ có trong quan hệ S",
+            "Giao của hai quan hệ R và S , được ký hiệu là R ∩ S , cho kết quả là một quan hệ chứa tất cả các bộ có trong R nhưng không có trong S"
+        ],
+        correctAnswer: 1,
+        explanation: "Giao của hai quan hệ R và S chứa tất cả các bộ có trong cả hai quan hệ R và S."
+    },
+//8    
+    {
+        question: "Khẳng định nào sau đây là chính xác nhất:",
+        options: [
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một quan hệ chứa tất cả các bộ có trong S nhưng không có trong R",
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một quan hệ chứa tất cả các bộ có trong S và trong R",
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một biểu thức chứa tất cả các bộ có trong S nhưng không có trong R",
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một quan hệ chứa tất cả các bộ có trong R nhưng không có trong S"
+        ],
+        correctAnswer: 3,
+        explanation: "Phép trừ quan hệ R và S cho kết quả là một quan hệ chứa tất cả các bộ có trong R nhưng không có trong S."
+    },
+//9
+    {
+        question: "Khẳng định nào sau đây là chính xác nhất:",
+        options: [
+            "Phép trừ quan hệ R và S , được ký hiệu là S - R, cho kết quả là một quan hệ chứa tất cả các bộ có trong S nhưng không có trong R",
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một quan hệ chứa tất cả các bộ có trong S và trong R",
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một biểu thức chứa tất cả các bộ có trong S nhưng không có trong R",
+            "Phép trừ quan hệ R và S , được ký hiệu là R - S, cho kết quả là một quan hệ chứa tất cả các bộ có trong R nhưng không có trong S"
+        ],
+        correctAnswer: 0,
+        explanation: "Phép trừ quan hệ S - R cho kết quả là một quan hệ chứa tất cả các bộ có trong S nhưng không có trong R."
+    },
+//10
+    {
+        question: "Khẳng định nào sau đây là chính xác nhất:",
+        options: [
+            "R ⨝ S = σ < Điều kiện chọn> (R × S) < Điều kiện nối>",
+            "R ⨝ S = σ < Điều kiện chọn> (R * S) < Điều kiện nối>",
+            "R ⨝ S = σ < Điều kiện chọn> (R ⇔ S) < Điều kiện nối>",
+            "R ⨝ S = σ < Điều kiện chọn> (R ⃝ S) < Điều kiện nối>"
+        ],
+        correctAnswer: 0,
+        explanation: "Phép nối theta được biểu diễn bằng σ (điều kiện chọn) áp dụng trên tích Descartes (R × S) với điều kiện nối."
+},
+//11
+{
+    question: "Kết quả của biểu thức đại số quan hệ: MãSốĐV ⨝ COUNT(MãSốNV), AVERAGE(Lương) (NHÂNVIÊN) Là một quan hệ có các cột sau:",
+    options: [
+        "MãSốĐV",
+        "MãSốĐV, COUNT(MãSốNV), AVERAGE(Lương)",
+        "MãSốĐV, COUNT(MãSốNV)",
+        "MãSốĐV, COUNT(MãSốNV), lươngtrungbình"
+    ],
+    correctAnswer: 1,
+    explanation: "Kết quả của biểu thức đại số quan hệ sẽ bao gồm các cột MãSốĐV, COUNT(MãSốNV) và AVERAGE(Lương) để thể hiện số lượng nhân viên và lương trung bình của họ theo từng đơn vị."
+},
+//12
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về các đề tài có kinh phí lớn hơn 5000000. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π TenDT (σ Kinhphi > 5000000 (DETAI))",
+        "σ Kinhphi > '5000000' (π TenDT (DETAI))",
+        "σ Kinhphi > 5000000 (π TenDT (DETAI))",
+        "π TenDT (σ Kinhphi > '5000000' (DETAI))"
+    ],
+    correctAnswer: 0,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các đề tài có kinh phí lớn hơn 5000000 trước khi chọn tên đề tài, giúp giảm số lượng bản ghi cần xử lý."
+},
+//13
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về các đề tài có kinh phí là 5000000. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ Kinhphi = 5000000 (π TenDT (DETAI))",
+        "σ Kinhphi = '5000000' (π TenDT (DETAI))",
+        "π TenDT (σ Kinhphi = 5000000 (DETAI))",
+        "π TenDT (σ Kinhphi = '5000000' (DETAI))"
+    ],
+    correctAnswer: 2,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các đề tài có kinh phí bằng 5000000 trước khi chọn tên đề tài, giúp giảm số lượng bản ghi cần xử lý."
+},
+//14
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về họ tên của các giáo viên có giới tính nam. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ GT = 'Nam' (π Hoten (GIAOVIEN))",
+        "σ Gioitinh = 'Nam' (π Hoten (GIAOVIEN))",
+        "π Hoten (σ Gioitinh = 'Nam' (GIAOVIEN))",
+        "π Hoten (σ Gioitinh = Nam (GIAOVIEN))"
+    ],
+    correctAnswer: 2,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các giáo viên có giới tính nam trước khi chọn họ tên, giúp giảm số lượng bản ghi cần xử lý."
+},
+//15
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về họ tên của các giáo viên có giới tính nữ. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ GT = 'Nữ' (π Hoten (GIAOVIEN))",
+        "σ Gioitinh = 'Nữ' (π Hoten (GIAOVIEN))",
+        "π Hoten (σ Gioitinh = Nữ (GIAOVIEN))",
+        "π Hoten (σ Gioitinh = 'Nữ' (GIAOVIEN))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các giáo viên có giới tính nữ trước khi chọn họ tên, giúp giảm số lượng bản ghi cần xử lý."
+},
+//16
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về họ tên của các giáo viên quê ở Thái Bình. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ Que = 'Thái Bình' (π Hoten (GIAOVIEN))",
+        "σ Quequan = 'Thái Bình' (π Hoten (GIAOVIEN))",
+        "π Hoten (σ Quequan = Thái Bình (GIAOVIEN))",
+        "π Hoten (σ Quequan = 'Thái Bình' (GIAOVIEN))"
+    ],
+    correctAnswer:3,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các giáo viên có quê quán ở Thái Bình trước khi chọn họ tên, giúp giảm số lượng bản ghi cần xử lý."
+},
+//17
+{
+    question: "Cho lược đồ CSDL gồm lược đồ quan hệ: SINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN); Dùng ngôn ngữ Đại số quan hệ, hiển thị danh sách sinh viên quê ở Hưng Yên, thông tin gồm: MASV, HOTEN.",
+    options: [
+        "π MaSV, Hoten (σ Quequan = 'Hưng Yên' (SINHVIEN))",
+        "π MaSV, Hoten (σ Que = 'Hưng Yên' (SINHVIEN))",
+        "σ Que = 'Hưng Yên' (π MaSV, Hoten (SINHVIEN))",
+        "σ Quequan = 'Hưng Yên' (π MaSV, Hoten (SINHVIEN))"
+    ],
+    correctAnswer: 0,
+    explanation: "Câu lệnh này là chính xác nhất vì nó lọc sinh viên có quê quán ở Hưng Yên trước khi chọn các cột MASV và HOTEN, giúp giảm số lượng bản ghi cần xử lý."
+},
+//18
+{
+    question: "Cho lược đồ CSDL gồm lược đồ quan hệ: SINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN); Dùng ngôn ngữ Đại số quan hệ, hiển thị danh sách sinh viên sinh năm 2000, thông tin gồm: MASV, HOTEN.",
+    options: [
+        "π MaSV, Hoten (σ Namsinh = '2000' (SINHVIEN))",
+        "π MaSV, Hoten (σ Namsinh = 2000 (SINHVIEN))",
+        "σ Namsinh = 2000 (π MaSV, Hoten (SINHVIEN))",
+        "σ Namsinh = '2000' (π MaSV, Hoten (SINHVIEN))"
+    ],
+    correctAnswer: 1,
+    explanation: "Câu lệnh này là chính xác nhất vì nó lọc sinh viên sinh năm 2000 trước khi chọn các cột MASV và HOTEN, giúp giảm số lượng bản ghi cần xử lý."
+},
+//19
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về họ tên của các giáo viên quê ở Hải Dương. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ Que = 'Hải Dương' (π Hoten (GIAOVIEN))",
+        "π Hoten (σ Quequan = 'Hải Dương' (GIAOVIEN))",
+        "π Hoten (σ Quequan = Hải Dương (GIAOVIEN))",
+        "σ Quequan = 'Hải Dương' (π Hoten (GIAOVIEN))"
+    ],
+    correctAnswer: 1,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các giáo viên có quê quán ở Hải Dương trước khi chọn họ tên, giúp giảm số lượng bản ghi cần xử lý."
+},
+//20
+{
+    question: "Cho lược đồ CSDL có lược đồ quan hệ: SINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN); Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về họ tên của các sinh viên sinh vào năm 1998. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π Hoten (σ NamSinh = '1998' (SINHVIEN))",
+        "π Hoten (σ NamSinh = 1998 (SINHVIEN))",
+        "σ NamSinh = 1998 (π Hoten (SINHVIEN))",
+        "π Hoten σ NamSinh = 1998 (SINHVIEN))"
+    ],
+    correctAnswer: 1,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc sinh viên sinh vào năm 1998 trước khi chọn họ tên, giúp giảm số lượng bản ghi cần xử lý."
+},
+//21
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: Nhanvien (MANV, HOTEN, GIOITINH, NGAYSINH, DIACHI, MAPB, MACV); Phongban (MAPB, TENPB); Chucvu (MACV, TENCV, TIENPHUCAP). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin các nhân viên sinh ngày 12-09-1988. Thông tin hiển thị gồm: MANV, HOTEN. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π MaNV, HoTen (σ NgaySinh = '12-09-1988' (NHANVIEN))",
+        "σ NgaySinh = '12-09-1988' (π MaNV, HoTen (NHANVIEN))",
+        "π MaNV, HoTen (σ NgaySinh = 1988-09-12 (NHANVIEN))",
+        "π MaNV, HoTen (σ NgaySinh = '12-09-1988' (NHANVIEN))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các nhân viên có ngày sinh là 12-09-1988 trước khi chọn các cột MANV và HOTEN, giúp giảm số lượng bản ghi cần xử lý."
+},
+//22
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: Nhanvien (MANV, HOTEN, GIOITINH, NGAYSINH, DIACHI, MAPB, MACV); Phongban (MAPB, TENPB); Chucvu (MACV, TENCV, TIENPHUCAP). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin các nhân viên sinh ngày 12-09-1980. Thông tin hiển thị gồm: MANV, HOTEN. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π MaNV, HoTen (σ NgaySinh = '12-09-1980' (NHANVIEN))",
+        "σ NgaySinh = '12-09-1980' (π MaNV, HoTen (NHANVIEN))",
+        "π MaNV, HoTen (σ NgaySinh = '12-09-1980' (NHANVIEN))",
+        "π MaNV, HoTen (σ NgaySinh = 1980-09-12 (NHANVIEN))"
+    ],
+    correctAnswer: 2,
+    explanation: "Câu lệnh này là tối ưu nhất vì nó lọc các nhân viên có ngày sinh là 12-09-1980 trước khi chọn các cột MANV và HOTEN, giúp giảm số lượng bản ghi cần xử lý."
+},
+//23
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về họ tên của các giáo viên quê ở Hưng Yên. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ Que='Hưng Yên' (π Hoten (GIAOVIEN))",
+        "π Hoten (σ Quequan=Hưng Yên (GIAOVIEN))",
+        "π Hoten (σ Quequan='Hưng Yên' (GIAOVIEN))",
+        "σ Quequan='Hưng Yên' (π Hoten (GIAOVIEN))"
+    ],
+    correctAnswer: 2,
+    explanation: "Câu lệnh này là chính xác và tối ưu nhất vì lọc các giáo viên có quê quán là 'Hưng Yên' trước khi chọn cột Họ tên, giảm dữ liệu xử lý."
+},
+//24
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, Cho biết mã đề tài, tên của các đề tài có kinh phí lớn hơn 15000000. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "σ Kinhphi>15000000 (π MaDT, TenDT (DETAI))",
+        "π MaDT, TenDT (σ Kinhphi>=15000000 (DETAI))",
+        "π TenDT (σ Kinhphi>15000000 (DETAI))",
+        "π MaDT, TenDT (σ Kinhphi>15000000 (DETAI))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này là chính xác và tối ưu nhất vì lọc các đề tài có kinh phí lớn hơn 15000000 trước khi chọn mã và tên đề tài, giúp tăng hiệu quả xử lý."
+},
+//25
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về tên của các đề tài thực hiện trong năm học 2019-2020. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π TenDT (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT (σ Namhoc = '2019-2020' (THUCHIEN_DT)))",
+        "π TenDT (σ Namhoc = '2019-2020' (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT THUCHIEN_DT))",
+        "σ Namhoc = '2019-2020' (π TenDT (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT THUCHIEN_DT))",
+        "π TenDT (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT (σ Nam = '2019-2020' (THUCHIEN_DT)))"
+    ],
+    correctAnswer: 0,
+    explanation: "Câu lệnh này là chính xác và tối ưu vì lọc trước các bản ghi theo điều kiện năm học, sau đó mới kết nối với quan hệ ĐỀ TÀI và chọn cột cần thiết, giúp giảm chi phí xử lý."
+},
+//26
+{
+    question: "Cho lược đồ CSDL gồm 3 lược đồ quan hệ: SINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN); PHONG (MAPHONG, TENPHONG, TANG); THUEPHONG (MASV, MAPHONG, NGAYTHUE, GIATHUE). Dùng ngôn ngữ Đại số quan hệ, Cho biết MAPHONG và số lượng sinh viên đã thuê. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "Maphong, Tenphong ℑ COUNT(MaSV) (π MAPHONG, TENPH, MASV (PHONG × THUEPHONG))",
+        "Maphong ℑ COUNT(MaSV) (π MAPHONG, TENPHONG, MASV (PHONG × THUEPHONG))",
+        "Maphong, Tenphong ℑ COUNT(MaSV) (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG)",
+        "Maphong ℑ COUNT(MaSV) (π MAPHONG, MASV (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này chính xác và tối ưu nhất vì sử dụng phép kết (⨝) giữa PHONG và THUEPHONG trước, rồi chọn các thuộc tính cần thiết (MAPHONG, MASV) để đếm số sinh viên thuê theo từng phòng."
+},
+//27
+{
+    question: "Cho lược đồ CSDL gồm 3 lược đồ quan hệ: SINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN); PHONG (MAPHONG, TENPHONG, TANG); THUEPHONG (MASV, MAPHONG, NGAYTHUE, GIATHUE). Dùng ngôn ngữ Đại số quan hệ, Cho biết MAPHONG, TENPHONG và số lượng sinh viên đã thuê. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "Maphong, Tenphong ℑ COUNT(MaSV) (π MAPHONG, TENPH, MASV (PHONG × THUEPHONG))",
+        "Maphong, Tenphong ℑ COUNT(MaSV) (π MAPHONG, TENPHONG, MASV (PHONG × THUEPHONG))",
+        "Maphong, Tenphong ℑ COUNT(MaSV) (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG)",
+        "Maphong, Tenphong ℑ COUNT(MaSV) (π MAPHONG, TENPHONG, MASV (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này chính xác và tối ưu nhất vì thực hiện phép kết giữa PHONG và THUEPHONG trước, sau đó chọn đúng các cột MAPHONG, TENPHONG và MASV để đếm số lượng sinh viên thuê theo từng phòng."
+},
+//28
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: SINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN); THUEPHONG (MASV, MAPHONG, NGAYTHUE, GIATHUE). Dùng ngôn ngữ Đại số quan hệ hiển thị danh sách các mã của sinh viên có sinh năm 1990 và đã thuê phòng có giá 400000. (Chọn câu trả lời tối ưu nhất)",
+    options: [
+        "π MASV (σ NAMSINH=1990 (SINHVIEN)) × (σ GIATHUE=400000 (THUEPHONG))",
+        "π MASV (σ NAMSINH=1990 (SINHVIEN)) ⨝ SINHVIEN.MASV=THUEPHONG.MASV (σ GIATHUE=400000 (THUEPHONG))",
+        "π MASV, HOTEN (σ NAMSINH=1990 (SINHVIEN)) × (σ GIATHUE=400000 (THUEPHONG))",
+        "(σ NAMSINH=1990 and GIATHUE=400000 (π MASV (SINHVIEN))) ⨝ SINHVIEN.MASV=THUEPHONG.MASV (THUEPHONG)"
+    ],
+    correctAnswer: 1,
+    explanation: "Phép chọn và kết hợp (⨝) giữa hai quan hệ sau khi lọc điều kiện riêng biệt là cách tối ưu nhất, vì nó giới hạn số bản ghi trước khi thực hiện kết nối."
+},
+//29
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: Nhanvien (MANV, HOTEN, GIOITINH, NGAYSINH, ĐIACHI, MAPB, MACV); Phongban (MAPB, TENPB); Chucvu (MACV, TENCV, TIENPHUCAP). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin các nhân viên giới tính nữ có phụ cấp chức vụ. Thông tin hiển thị gồm: MANV, HOTEN, ĐIACHI. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π MaNV, Hoten, Diachi ((σ Gioitinh = 'Nữ' (NHANVIEN)) ⨝ NHANVIEN.MACV=CHUCVU.MACV (CHUCVU))",
+        "π MaNV, Hoten, Diachi (σ Gioitinh = Nữ (NHANVIEN ⨝ NHANVIEN.MACV=CHUCVU.MACV CHUCVU))",
+        "σ Gioitinh = 'Nữ' ((π MaNV, Hoten, Diachi (NHANVIEN)) ⨝ NHANVIEN.MACV=CHUCVU.MACV (CHUCVU))",
+        "π MaNV, Hoten, Diachi (σ Gioitinh = 'Nữ' (NHANVIEN ⨝ NHANVIEN.MAPB=CHUCVU.MACV CHUCVU))"
+    ],
+    correctAnswer: 0,
+    explanation: "Phép chọn giới tính nữ được áp dụng trước trên quan hệ NHANVIEN, sau đó thực hiện kết với CHUCVU theo MACV để đảm bảo chỉ chọn những nhân viên có chức vụ (tức là có phụ cấp). Cuối cùng, phép chiếu lấy các thuộc tính yêu cầu."
+},
+//30
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ: GIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN); DETAI (MADT, TENDT, KINHPHI); THUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI). Dùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về tên của các đề tài được xếp loại Xuất sắc. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π TenDT (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT (σ Xeploai = 'Xuất sắc' (THUCHIEN_DT)))",
+        "π TenDT (σ Xeploai = 'Xuất sắc' (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT THUCHIEN_DT))",
+        "σ Xeploai = 'Xuất sắc' (π TenDT (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT THUCHIEN_DT))",
+        "π TenDT (DETAI ⨝ DETAI.MADT=THUCHIEN_DT.MADT (σ Loai = 'Xuất sắc' (THUCHIEN_DT)))"
+    ],
+    correctAnswer: 0,
+    explanation: "Câu lệnh này chính xác và tối ưu nhất vì lọc các bản ghi được xếp loại 'Xuất sắc' trong THUCHIEN_DT trước khi kết với DETAI theo MADT, từ đó chỉ truy vấn các đề tài liên quan."
+},
+//31
+{
+    question: "Cho lược đồ CSDL gồm 3 lược đồ quan hệ:\nSINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN);\nPHONG (MAPHONG, TENPHONG, TANG);\nTHUEPHONG (MASV, MAPHONG, NGAYTHUE, GIATHUE).\nDùng ngôn ngữ Đại số quan hệ, cho biết tên của các phòng có giá thuê là 500000. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π TENPHONG(σ GIATHUE= 500000  (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG))",
+        "π TENPHONG (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG)",
+        "σ GIATHUE= 500000 ( π TENPHONG (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG))",
+        "π TENPHONG( (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG (σ GIATHUE= 500000  THUEPHONG)))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này chính xác và tối ưu nhất vì chúng ta thực hiện lọc các bản ghi trong bảng **THUEPHONG** có giá thuê **GIATHUE = 500000** trước khi kết nối với bảng **PHONG**. Điều này giúp giảm số lượng bản ghi trong quá trình kết nối, tối ưu hiệu suất truy vấn."
+},
+//32
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ:\nGIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN);\nDETAI (MADT, TENDT, KINHPHI);\nTHUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI).\nDùng ngôn ngữ Đại số quan hệ, hiển thị thông tin về MAGV, HOTEN, số lượng đề tài đã thực hiện là 2 trong năm học 2018-2019. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π MAGV, HOTEN, COUNT(MADT)=2 (π MAGV, HOTEN, MADT (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV (σ NAMHOC= ‘2018-2019’ THUCHIEN_DT)))",
+        "π MAGV, HOTEN, COUNT(TENDT)=2 (π MAGV, HOTEN, MADT (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV (σ NAMHOC= ‘2018-2019’ THUCHIEN_DT)))",
+        "π MAGV, HOTEN, COUNT(MADT)=2 (π MAGV, HOTEN, MADT (σ NAMHOC= ‘2018-2019’ (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV THUCHIEN_DT)))",
+        "π MAGV, HOTEN, COUNT(MADT)=2 (σ NAMHOC= ‘2018-2019’ (π MAGV, HOTEN, MADT (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV THUCHIEN_DT)))"
+    ],
+    correctAnswer: 1,
+    explanation: "Câu lệnh này là chính xác và tối ưu nhất vì thực hiện kết nối giữa bảng **GIAOVIEN** và **THUCHIEN_DT** qua **MAGV**, sau đó lọc theo năm học 2018-2019. Sau khi lọc, tính số lượng đề tài thực hiện bởi mỗi giáo viên trong năm học này và chỉ lấy những giáo viên thực hiện đúng 2 đề tài. Đây là cách tiếp cận tối ưu và chính xác nhất."
+},
+//33
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ:\nGIAOVIEN (MAGV, HOTEN, GIOITINH, NAMSINH, QUEQUAN);\nDETAI (MADT, TENDT, KINHPHI);\nTHUCHIEN_DT (MAGV, MADT, NAMHOC, XEPLOAI).\nDùng ngôn ngữ Đại số quan hệ, hiển thị thông tin MAGV, HOTEN, số lượng đề tài của các giáo viên tham gia 3 đề tài được xếp loại Xuất sắc. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π MAGV, HOTEN, COUNT(MADT)=3 (π MAGV, HOTEN, MADT ((GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV (σ XEPLOAI= 'Xuất sắc' (THUCHIEN_DT)))))",
+        "π MAGV, HOTEN, COUNT(TENDT)=3 (π MAGV, HOTEN, MADT (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV (σ XEPLOAI= 'Xuất sắc' (THUCHIEN_DT))))",
+        "π MAGV, HOTEN, COUNT(MADT)=3 (σ XEPLOAI= 'Xuất sắc' (π MAGV, HOTEN, MADT (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV THUCHIEN_DT)))",
+        "π MAGV, HOTEN, COUNT(MADT)=3 (π MAGV, HOTEN, MADT (σ XEPLOAI= 'Xuất sắc' (GIAOVIEN ⨝ GIAOVIEN.MAGV=THUCHIEN_DT.MAGV THUCHIEN_DT))))"
+    ],
+    correctAnswer: 0,
+    explanation: "Câu lệnh này là chính xác và tối ưu nhất vì lọc các đề tài có xếp loại 'Xuất sắc' trong bảng **THUCHIEN_DT** trước khi kết nối với bảng **GIAOVIEN** thông qua **MAGV**. Sau đó, thực hiện tính số lượng các đề tài tham gia và chỉ lấy các giáo viên tham gia đúng 3 đề tài."
+},
+//34
+{
+    question: "Cho lược đồ CSDL gồm 3 lược đồ quan hệ:\nSINHVIEN (MASV, HOTEN, NAMSINH, QUEQUAN);\nPHONG (MAPHONG, TENPHONG, TANG);\nTHUEPHONG (MASV, MAPHONG, NGAYTHUE, GIATHUE).\nDùng ngôn ngữ Đại số quan hệ, cho biết MAPHONG, TENPHONG và số lượng sinh viên của các phòng có 4 sinh viên thuê. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "π MAPHONG, TENPHONG, COUNT(MASV)=4 (π MAPHONG, TENPHONG, MASV (PHONG × THUEPHONG))",
+        "π MAPHONG, TENPHONG, COUNT(MASV)=4 (π MAPHONG, TENPHONG, MASV (PHONG × THUEPHONG))",
+        "π MAPHONG, TENPHONG, COUNT(MASV)=4 (PHONG ⨝ SINHVIEN.MAPHONG=THUEPHONG.MAPHONG THUEPHONG)",
+        "π MAPHONG, TENPHONG, COUNT(MASV)=4 (π MAPHONG, TENPHONG, MASV (PHONG ⨝ PHONG.MAPHONG=THUEPHONG.MAPHONG THUEPHONG))"
+    ],
+    correctAnswer: 3,
+    explanation: "Câu lệnh này là chính xác và tối ưu nhất vì thực hiện phép kết giữa bảng **PHONG** và **THUEPHONG** qua **MAPHONG**, sau đó tính số lượng sinh viên (**COUNT(MASV)**) trong mỗi phòng. Chỉ lấy các phòng có 4 sinh viên thuê. Đây là cách tiếp cận tối ưu và chính xác."
+},
+//35
+{
+    question: "Cho lược đồ CSDL gồm các lược đồ quan hệ:\nNhanvien (MANV, HOTEN, GIOITINH, NGAYSINH, ĐIACHI, MAPB, MACV);\nPhongban (MAPB, TENPB);\nChucvu (MACV, TENCV, TIENPHUCAP).\nDùng ngôn ngữ Đại số quan hệ, hiển thị thông tin của các phòng ban có 8 nhân viên, thông tin hiển thị gồm: MaPB, TenPB, SLnhanvien. (Chọn câu trả lời chính xác, tối ưu nhất)",
+    options: [
+        "(MaPB, TenPB, SLnhanvien) ← MAPB, TENPB ⨝ COUNT(MANV)=8 (π MAPB, TENPB, MANV (PHONGBAN ⨝ PHONGBAN.MAPB=NHANVIEN.MAPB NHANVIEN)))",
+        "KQ (MaPB, TenPB, SLnhanvien) ← MAPB, TENPB ⨝ COUNT(MANV) (π MAPB, TENPB, MANV (PHONGBAN ⨝ PHONGBAN.MAPB=NHANVIEN.MAPB NHANVIEN)))",
+        "KQ (MaPB, TenPB, SLnhanvien) ← MAPB, TENPB ⨝ COUNT(MANV)=8 (π MAPB, TENPB, MANV (PHONGBAN ⨝ PHONGBAN.MAPB=NHANVIEN.MAPB NHANVIEN)))",
+        "KQ (MaPB, TenPB, SLNV) ← MAPB, TENPB ⨝ COUNT(MANV)=8 (π MAPB, TENPB, MANV (PHONGBAN ⨝ PHONGBAN.MAPB=NHANVIEN.MAPB NHANVIEN)))"
+    ],
+    correctAnswer: 2,
+    explanation: "Câu lệnh này chính xác và tối ưu nhất vì thực hiện phép kết hợp giữa bảng **PHONGBAN** và **NHANVIEN** qua **MAPB**, sau đó tính số lượng nhân viên (**COUNT(MANV)**) trong mỗi phòng ban. Chỉ lấy các phòng ban có đúng **8 nhân viên**. Đây là cách tiếp cận tối ưu và chính xác."
+}                
+],
+
+
+
+    "2": 
+            [  
+//1           
+            {
+            question: "Hệ tiên đề Armstrong cho các phụ thuộc hàm gồm các quy tắc:",
+            options: [
+                "Phản xạ, hợp và tách",
+                "Phản xạ, bắc cầu, hợp và tách",
+                "Phản xạ, gia tăng, hợp và tách",
+                "Phản xạ, gia tăng, bắc cầu."
+            ],
+            correctAnswer: 3,
+            explanation: "Hệ tiên đề Armstrong bao gồm các quy tắc phản xạ, gia tăng và bắc cầu."
+           },  
+//2
+            {
+        question: "Quy tắc gia tăng trong hệ tiên đề Armstrong:",
+        options: [
+            "Nếu A->B suy ra B->A",
+            "Nếu A->B suy ra A->BC",
+            "Nếu A ->B suy ra AC->BC",
+            "Nếu A-> B suy ra BC->A"
+        ],
+        correctAnswer: 2,
+        explanation: "Quy tắc gia tăng cho phép từ A->B suy ra AC->BC."
+    },
+//3
+    {
+        question: "Quy tắc bắc cầu trong hệ tiên đề Armstrong:",
+        options: [
+            "Nếu A->B và B->C thì A->C",
+            "Nếu A->B và B->C thì AC->B",
+            "Nếu A->B và B->C thì AB->C",
+            "Nếu A->B và B->C thì AC->BC"
+        ],
+        correctAnswer: 0,
+        explanation: "Quy tắc bắc cầu cho phép từ A->B và B->C suy ra A->C."
+    },
+//4   
+    {
+        question: "Tính chất nào sau đây là tính chất hợp:",
+        options: [
+            "Nếu X→Y và Z→W thì XZ→YW",
+            "Nếu X→Y và X→Z thì X→YZ",
+            "Nếu X→YZ thì X→Y và X→Z",
+            "Nếu X→YZ, Z→VW thì X→YVW"
+        ],
+        correctAnswer: 1,
+        explanation: "Tính chất hợp cho phép từ X→Y và X→Z suy ra X→YZ."
+    },
+//11
+    {
+        question: "Cho lược đồ quan hệ (U, F) với U=ABCDEGK và tập phụ thuộc hàm F={AB→C, B→D, CD→E, CE→GK, G→A}. Bao đóng của tập thuộc tính CDE là:",
+        options: [
+            "CDE",
+            "ACDEGK",
+            "ABCDEGK",
+            "ABCDE"
+        ],
+        correctAnswer: 1,
+        explanation: "Bao đóng của tập thuộc tính CDE là ACDEGK."
+    },
+//12
+    {
+        question: "Cho lược đồ quan hệ (U, F) với U=ABCDEGK và tập phụ thuộc hàm F={AB→C, B→D, CD→E, CE→GK, G→A}. Bao đóng của tập thuộc tính AB là:",
+        options: [
+            "ABCDEGK",
+            "ABCD",
+            "AB",
+            "ABCDEK"
+        ],
+        correctAnswer: 0,
+        explanation: "Bao đóng của tập thuộc tính AB là ABCDEGK."
+    },
+//13
+    {
+        question: "Cho lược đồ quan hệ (U, F) với U=ABCDEGK và tập phụ thuộc hàm F={AB→C, B→D, CD→E, CE→GK, G→A}. Bao đóng của tập thuộc tính CGK là:",
+        options: [
+            "CGK",
+            "ABCDEGK",
+            "ACGK",
+            "ABCDE"
+        ],
+        correctAnswer: 2,
+        explanation: "Bao đóng của tập thuộc tính CGK là ACGK."
+    },   
+//14
+    {
+            question: "Cho lược đồ quan hệ (U, F) với U=ABCDEGK và tập phụ thuộc hàm F={AB→C, B→D, CD→E, CE→GK, G→A}. Bao đóng của tập thuộc tính BCD là:",
+            options: [
+                "BCD",
+                "BCED",
+                "ABCDE",
+                "ABCDEGK"
+            ],
+            correctAnswer: 3,
+            explanation: "Bao đóng của tập thuộc tính BCD là ABCDEGK."
+    },
+//15
+    {
+            question: "Cho lược đồ quan hệ (U, F) với U=ABCDEGK và tập phụ thuộc hàm F={AB→C, B→D, CD→E, CE→GK, G→A}. Bao đóng của tập thuộc tính ADK là:",
+            options: [
+                "ABCDEGK",
+                "ADK",
+                "ABCDE",
+                "ADEGK"
+            ],
+            correctAnswer: 1,
+            explanation: "Bao đóng của tập thuộc tính ADK là ADK."
+    },
+//25
+        {
+            question: "Cho lược đồ quan hệ α = (U, F) với U= ABCD, F={AB→C, A→D, BD→C}. Tập phụ thuộc hàm G nào là phủ không dư của tập phụ thuộc hàm F?",
+            options: [
+                "G={AB→C, A→D, BD→C}",
+                "G={AB→C, A→D}",
+                "G={A→D, BD→C}",
+                "G={AB→C}"
+            ],
+            correctAnswer: 2,
+            explanation: "Tập phụ thuộc hàm G={A→D, BD→C} là phủ không dư của tập phụ thuộc hàm F."
+        },
+//2626
+        {
+            question: "Cho lược đồ quan hệ α = (U, F) với U= ABCE, F={AB→C, A→E, BE→C}. Tập phụ thuộc hàm G nào là phủ không dư của tập phụ thuộc hàm F?",
+            options: [
+                "G={AB→C, A→E, BE→C}",
+                "G={AB→C, A→E}",
+                "G={A→E, BE→C}",
+                "G={A→D, BD→C}"
+            ],
+            correctAnswer: 2,
+            explanation: "Tập phụ thuộc hàm G={A→E, BE→C} là phủ không dư của tập phụ thuộc hàm F."
+        }                
+            ],
+
+
+
+
+            "3": [
+    
+            // Câu 1
+            {
+                question: "Cần thiết phải chuẩn hoá dữ liệu vì?",
+                options: [
+                    "Khi thực hiện các phép lưu trữ trên các quan hệ chưa được chuẩn hoá thường xuất hiện các dị thường thông tin",
+                    "Khi thực hiện các phép tách - kết nối tự nhiên các quan hệ",
+                    "Khi thực hiện các phép tìm kiếm, xuất hiện các dị thường thông tin",
+                    "Giá trị khoá nhận giá trị null hay giá trị không xác định"
+                ],
+                correctAnswer: 0,
+                explanation: "Chuẩn hóa dữ liệu giúp loại bỏ các dị thường thông tin khi thực hiện các phép cập nhật, chèn, xóa dữ liệu."
+            },
+            // Câu 2
+            {
+                question: "Mục tiêu của chuẩn hoá dữ liệu là?",
+                options: [
+                    "Đảm bảo tính bảo mật dữ liệu",
+                    "Triệt tiêu mức cao nhất khả năng xuất hiện các dị thường thông tin",
+                    "Đẩm bảo tính nhất quán dữ liệu",
+                    "Đảm bảo cho việc lưu trữ dữ liệu"
+                ],
+                correctAnswer: 1,
+                explanation: "Mục tiêu chính của chuẩn hóa dữ liệu là giảm thiểu tối đa các dị thường thông tin trong cơ sở dữ liệu."
+            },
+            // Câu 3
+            {
+                question: "Lược đồ quan hệ gồm các thuộc tính mã số, họ tên và địa chỉ ở dạng chuẩn nào?",
+                options: [
+                    "Dạng chuẩn 2NF",
+                    "Dạng chuẩn 1NF, không là 2NF",
+                    "Dạng chuẩn 3NF",
+                    "Dạng chuẩn 2NF, không là 3NF"
+                ],
+                correctAnswer: 2,
+                explanation: "Lược đồ chỉ chứa các thuộc tính đơn trị và không có phụ thuộc hàm bắc cầu nên đạt chuẩn 3NF."
+            },
+            // Câu 4
+            {
+                question: "Chọn một khẳng định nào sau đây là đúng nhất?",
+                options: [
+                    "Chuẩn hoá dữ liệu là quá trình tách quan hệ không làm tổn thất thông tin",
+                    "Quan hệ gốc được chứa trong quan hệ kết nối tự nhiên của các quan hệ chiếu",
+                    "Dữ liệu lưu trữ trong CSDL phản ảnh tính tính toàn vẹn dữ liệu",
+                    "Chuẩn hoá dữ liệu là quá trình thực hiện các phép lưu trữ"
+                ],
+                correctAnswer: 0,
+                explanation: "Một phép tách tốt phải đảm bảo không làm mất thông tin so với lược đồ quan hệ ban đầu."
+            },
+            // Câu 5
+            {
+                question: "Chọn một khẳng định nào sau đây là đúng nhất khi tách quan hệ:",
+                options: [
+                    "Đảm bảo tính toàn vẹn dữ liệu",
+                    "Đảm bảo tính độc lập dữ liệu",
+                    "Làm tổn thất thông tin",
+                    "Không làm tổn thất thông tin"
+                ],
+                correctAnswer: 0,
+                explanation: "Phép tách quan hệ phải đảm bảo tính toàn vẹn dữ liệu, nghĩa là không làm mất thông tin và bảo toàn các phụ thuộc hàm."
+            },
+            // Câu 6
+            {
+                question: "Trong lược đồ quan hệ dạng chuẩn 2NF:",
+                options: [
+                    "cấm tất cả các phụ thuộc đầy đủ vào khoá.",
+                    "các thuộc tính khoá phụ thuộc vào các tập con của khoá.",
+                    "các thuộc tính không khoá phụ thuộc vào khoá.",
+                    "cấm tất cả các phụ thuộc không đầy đủ vào khoá."
+                ],
+                correctAnswer: 3,
+                explanation: "Dạng chuẩn 2NF yêu cầu không có phụ thuộc hàm không đầy đủ vào khóa chính, tức là mọi thuộc tính không khóa phải phụ thuộc hàm đầy đủ vào khóa chính."
+            },
+            // Câu 7
+            {
+                question: "Khẳng định nào sau đây là chính xác nhất:",
+                options: [
+                    "Cho lược đồ quan hệ α =(U, F), lược đồ α được gọi là ở dạng chuẩn 3, ký hiệu là 3NF, nếu như lược đồ ở dạng chuẩn và các thuộc tính không khoá của α là không phụ thuộc hàm bắc cầu vào khoá chính.",
+                    "Cho lược đồ quan hệ α =(U, F), lược đồ α được gọi là ở dạng chuẩn 3, ký hiệu là 3NF, nếu như lược đồ ở dạng chuẩn 2NF và các thuộc tính không khoá của α là phụ thuộc hàm bắc cầu vào khoá chính.",
+                    "Cho lược đồ quan hệ α =(U, F), lược đồ α được gọi là ở dạng chuẩn 3, ký hiệu là 3NF, nếu như lược đồ ở dạng chuẩn 2NF và các thuộc tính không khoá của α là không phụ thuộc hàm bắc cầu vào khoá chính.",
+                    "Cho lược đồ quan hệ α =(U, F), lược đồ α được gọi là ở dạng chuẩn 3, ký hiệu là 3NF, nếu như lược đồ ở dạng chuẩn 2NF và các thuộc tính không khoá của α là không phụ thuộc hàm đầy đủ vào khoá chính."
+                ],
+                correctAnswer: 2,
+                explanation: "Dạng chuẩn 3NF yêu cầu lược đồ phải ở 2NF và không có phụ thuộc hàm bắc cầu từ thuộc tính không khóa vào khóa chính."
+            },
+            // Câu 8
+            {
+                question: "Tách lược đồ α = (U, F) với U=CRHTSG, F ={C→T, HR→C, CH→R, CS→G, HS→R} thành các lược đồ con thuộc dạng chuẩn BCNF.",
+                options: [
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}; U₄=HSR, F₄= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}"
+                ],
+                correctAnswer: 1,
+                explanation: "Phép tách đúng phải bao gồm tất cả các phụ thuộc hàm và đảm bảo mỗi lược đồ con đạt BCNF."
+            },
+           
+            
+            
+           
+            // Câu 14
+            {
+                question: "Lược đồ quan hệ sau không đạt dạng chuẩn nào, theo định nghĩa?<br><br>Student ([*student-no, course-no], student_name, address, course_name, grade)",
+                options: [
+                    "1NF",
+                    "2NF",
+                    "3NF",
+                    "BCNF"
+                ],
+                correctAnswer: 1,
+                explanation: "Lược đồ này không đạt 2NF vì có các thuộc tính không khóa (như student_name, address) phụ thuộc bộ phận vào khóa chính (chỉ phụ thuộc vào student-no)."
+            },
+            
+            // Câu 16
+            {
+                question: "Tách lược đồ α = (U, F) với U=ARHTSG, F ={A→T, HR→A, AH→R, AS→G, HS→R} thành các lược đồ con thuộc dạng chuẩn BCNF.",
+                options: [
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=ASG, F₁= {AS→G}; U₂=AT, F₂={A→T}; U₃=AHR, F₃= {HR→A}; U₄=HSR, F₄= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃) với U₁=ASG, F₁= {AS→G}; U₂=AT, F₂={A→T}; U₃=HRA, F₃= {HR→A}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃) với U₁=ASG, F₁= {AS→G}; U₂=AT, F₂={A→T}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂) với U₁=ASG, F₁= {AS→G}; U₂=AT, F₂={A→T}; U₃=HRA, F₃= {HR→A}"
+                ],
+                correctAnswer: 0,
+                explanation: "Phép tách đúng phải bao gồm tất cả các phụ thuộc hàm và đảm bảo mỗi lược đồ con đạt BCNF."
+            },
+            // Câu 17
+            {
+                question: "Tách lược đồ α = (U, F) với U=CEHTSG, F ={C→T, HE→C, CH→E, CS→G, HS→E} thành các lược đồ con thuộc dạng chuẩn BCNF.",
+                options: [
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}; U₄=HSR, F₄= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}"
+                ],
+                correctAnswer: 1,
+                explanation: "Phép tách đúng phải bao gồm tất cả các phụ thuộc hàm và đảm bảo mỗi lược đồ con đạt BCNF."
+            },
+            // Câu 18
+            {
+                question: "Tách lược đồ α = (U, F) với U=BTHRSG, F ={B→T, HR→B, HT→R, BS→G, HS→R} thành các lược đồ con thuộc dạng chuẩn BCNF.",
+                options: [
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=BSG, F₁= {BS→G}; U₂=HRB, F₂= {HR→B}; U₃=HSR, F₃= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=BSG, F₁= {BS→G}; U₂=HTR, F₂={HT→R}; U₃=HRB, F₃= {HR→B}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=BSG, F₁= {BS→G}; U₂=BT, F₂={B→T}; U₃=HRB, F₃= {HR→B}; U₄=HSR, F₄= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=BSG, F₁= {BS→G}; U₂=HTR, F₂={HT→R}; U₃=HRB, F₃= {HR→B}; U₄=HSR, F₄= {HS→R}"
+                ],
+                correctAnswer: 2,
+                explanation: "Phép tách đúng phải bao gồm tất cả các phụ thuộc hàm và đảm bảo mỗi lược đồ con đạt BCNF."
+            },
+            // Câu 19
+            {
+                question: "Tách lược đồ α = (U, F) với U=CTHRSG, F ={C→T, HR→C, HT→R, CS→G, HS→R} thành các lược đồ con thuộc dạng chuẩn BCNF.",
+                options: [
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HTR, F₃= {HT→R}; U₄=HSR, F₄= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=CT, F₁={C→T}; U₂=HRC, F₂= {HR→C}; U₃=HSR, F₃= {HS→R}",
+                    "α₁ = (U₁, F₁), α₂ = (U₂, F₂), α₃ = (U₃, F₃), α₄ = (U₄, F₄) với U₁=CSG, F₁= {CS→G}; U₂=CT, F₂={C→T}; U₃=HRC, F₃= {HR→C}; U₄=HSR, F₄= {HS→R}"
+                ],
+                correctAnswer: 3,
+                explanation: "Phép tách đúng phải bao gồm tất cả các phụ thuộc hàm và đảm bảo mỗi lược đồ con đạt BCNF."
+            },
+            // Câu 20
+            {
+                question: "Cho lược đồ quan hệ α = (U, F) với U= ABCDEG và tập phụ thuộc hàm F = { A→B, C→DG , AC→E, D→G }. Hỏi α đạt dạng chuẩn nào?",
+                options: [
+                    "1NF",
+                    "2NF",
+                    "3NF",
+                    "BCNF"
+                ],
+                correctAnswer: 0,
+                explanation: "Lược đồ này chỉ đạt 1NF vì có phụ thuộc hàm bộ phận (A→B trong khi khóa là AC)."
+            },
+            // Câu 21
+            {
+                question: "Cho lược đồ quan hệ α = (U, F) với U= ABCD và tập phụ thuộc hàm F = { AB→D, AC→BD, B→C }. Hỏi α đạt dạng chuẩn nào?",
+                options: [
+                    "1NF",
+                    "2NF",
+                    "3NF",
+                    "BCNF"
+                ],
+                correctAnswer: 2,
+                explanation: "Lược đồ này đạt 3NF vì không có phụ thuộc hàm bộ phận vào khóa và không có phụ thuộc hàm bắc cầu."
+            },
+            // Câu 22
+            {
+                question: "Cho lược đồ quan hệ α = (U, F) với U = ABCD, F = {D→B, C→A, B→ACD }. Hỏi α đạt dạng chuẩn nào?",
+                options: [
+                    "1NF",
+                    "2NF",
+                    "3NF",
+                    "BCNF"
+                ],
+                correctAnswer: 1,
+                explanation: "Lược đồ này đạt 2NF vì không có phụ thuộc hàm bộ phận vào khóa, nhưng có phụ thuộc hàm bắc cầu (B→ACD trong khi B không phải là siêu khóa)."
+            },
+            // Câu 23
+            {
+                question: "Cho lược đồ quan hệ α = (U, F) với U = ABCD, F={CD→B, A→C, B→ACD }. Hỏi α đạt dạng chuẩn nào?",
+                options: [
+                    "1NF",
+                    "2NF",
+                    "3NF",
+                    "BCNF"
+                ],
+                correctAnswer: 2,
+                explanation: "Lược đồ này đạt 3NF vì không có phụ thuộc hàm bộ phận vào khóa và không có phụ thuộc hàm bắc cầu từ thuộc tính không khóa vào khóa."
+            },
+            // Câu 24
+            {
+                question: "Cho lược đồ quan hệ α= (U, F) với U= ABCDEGI; F= {AE→BCD, AG→I, BC→E, BE→G}. Hỏi α đạt dạng chuẩn nào?",
+                options: [
+                    "1NF",
+                    "2NF",
+                    "3NF",
+                    "BCNF"
+                ],
+                correctAnswer: 0,
+                explanation: "Lược đồ này chỉ đạt 1NF vì có phụ thuộc hàm bộ phận (AG→I trong khi khóa là AE)."
+            } 
+    
+    
+        ],
+
+
+
+
+            
+            "4": [
+//1
+                 {
+            question: "Thuộc tính phức hợp là:",
+            options: [
+                "Thuộc tính có thể phân chia được thành các thành phần nhỏ hơn, biểu diễn các thuộc tính cơ bản hơn với các ý nghĩa độc lập.",
+                "Thuộc tính có thể nhận về nhiều giá trị cho cùng một thực thể.",
+                "Thuộc tính mà giá trị của nó được nhập vào khi cài đặt cơ sở dữ liệu.",
+                "Thuộc tính không thể phân chia được thành các thành phần nhỏ hơn."
+            ],
+            correctAnswer: 0,
+            explanation: "Thuộc tính phức hợp có thể được phân chia thành các thành phần nhỏ hơn, mỗi thành phần có ý nghĩa độc lập."
+        },
+//2
+        {
+            question: "Thế nào là cơ sở dữ liệu quan hệ?",
+            options: [
+                "Cơ sở dữ liệu được xây dựng dựa trên mô hình dữ liệu quan hệ.",
+                "Cơ sở dữ liệu dùng để tạo lập, cập nhật và khai thác CSDL quan hệ.",
+                "Cơ sở dữ liệu được xây dựng dựa trên mô hình dữ liệu quan hệ và khai thác CSDL quan hệ.",
+                "Cơ sở dữ liệu dùng để tạo lập, cập nhật và khai thác CSDL quan hệ dựa trên mô hình dữ liệu quan hệ."
+            ],
+            correctAnswer: 3,
+            explanation: "Cơ sở dữ liệu quan hệ được xây dựng dựa trên mô hình dữ liệu quan hệ và cho phép tạo lập, cập nhật và khai thác CSDL quan hệ."
+        },
+//3
+        {
+            question: "Phát biểu nào sau đây là sai?",
+            options: [
+                "Cấp của một kiểu liên kết là số các kiểu thực thể tham gia vào kiểu liên kết đó.",
+                "Tên vai trò dùng để chỉ rõ vai trò của các thực thể của kiểu thực thể tham gia liên kết, nó giúp đỡ việc làm rõ ý nghĩa của liên kết.",
+                "Miền giá trị của thuộc tính là một tập các giá trị có thể gán cho thuộc tính này đối với mỗi thực thể riêng biệt.",
+                "Kiểu thực thể yếu là kiểu thực thể chỉ có duy nhất một khóa và được biểu diễn trong lược đồ ER như một hình hộp chữ nhật có chứa tên của kiểu thực thể yếu."
+            ],
+            correctAnswer: 3,
+            explanation: "Kiểu thực thể yếu thường có một khóa phụ thuộc vào kiểu thực thể khác và được biểu diễn bằng hình thoi trong lược đồ ER, không phải là hình hộp chữ nhật."
+        },
+        //4
+         {
+        question: "Số ngôi của kiểu liên kết là:",
+        options: [
+            "Sự kết hợp của thuộc tính phức hợp và đa trị",
+            "Sự kết hợp của thuộc tính phức hợp với kiểu liên kết",
+            "Số kiểu thực thể tham gia vào kiểu liên kết",
+            "Số liên kết của kiểu thực thể"
+        ],
+        correctAnswer: 2,
+        explanation: "Số ngôi của kiểu liên kết xác định số lượng kiểu thực thể tham gia vào mối quan hệ đó."
+    },
+//5
+    {
+        question: "Đặc trưng cấu trúc của mô hình mạng là:",
+        options: [
+            "Chứa các liên kết một - một và một - nhiều",
+            "Chứa các liên kết một - một, một - nhiều và nhiều - nhiều",
+            "Chứa các liên kết một - một, một - nhiều và nhiều - nhiều",
+            "Chứa các liên kết nhiều - một và một - nhiều"
+        ],
+        correctAnswer: 0,
+        explanation: "Mô hình mạng cho phép các liên kết một - một và một - nhiều, tạo ra cấu trúc linh hoạt cho các mối quan hệ."
+    },
+//6
+    {
+        question: "Trong CSDL mạng, khi thực hiện các phép tìm kiếm?",
+        options: [
+            "Không phức tạp",
+            "CSDL càng lớn thì tìm kiếm càng phức tạp",
+            "Câu hỏi và kết quả các câu hỏi tìm kiếm thường đối xứng với nhau",
+            "Câu hỏi và kết quả các câu hỏi tìm kiếm không đối xứng với nhau"
+        ],
+        correctAnswer: 1,
+        explanation: "Khi kích thước của cơ sở dữ liệu tăng lên, độ phức tạp của việc tìm kiếm cũng tăng theo."
+    },
+//7
+    {
+        question: "Mô hình CSDL phân cấp là mô hình?",
+        options: [
+            "Dữ liệu được biểu diễn bằng con trỏ",
+            "Dữ liệu được biểu diễn bằng mối quan hệ thực thể",
+            "Dữ liệu được biểu diễn bằng bảng",
+            "Dữ liệu được biểu diễn bằng cấu trúc cây"
+        ],
+        correctAnswer: 3,
+        explanation: "Mô hình CSDL phân cấp tổ chức dữ liệu theo cấu trúc cây, trong đó mỗi nút có thể có nhiều nút con."
+    },
+//8
+    {
+        question: "Từ khóa nào của SQL nào sau đây để quy định thuộc tính ‘TenCty’ không được trùng lặp nhau:",
+        options: [
+            "TenCty char(40) Primary key",
+            "TenCty char(40) Unique",
+            "TenCty char(40) DEFAULT (TenCty)",
+            "TenCty Constraint cs_Thu Primary key"
+        ],
+        correctAnswer: 1,
+        explanation: "Từ khóa UNIQUE đảm bảo rằng giá trị của thuộc tính 'TenCty' không được trùng lặp trong bảng."
+    },
+//9
+    {
+        question: "Lệnh SQL nào sau đây để quy định thuộc tính GIOITINH nhận giá trị mặc định là ‘Nam’:",
+        options: [
+            "GIOITINH char(3) Constraint cs_GT DEFAULT ‘Nam’",
+            "GIOITINH char(3) Constraint cs_GT DEFAULT (GIOITINH IN (‘Nam’,’Nu’))",
+            "GIOITINH char(3) CHECK (GIOITINH IN (‘Nam’,’Nu’))",
+            "GIOITINH char(3) Constraint cs_GT UNIQUE(GIOITINH IN (‘Nam’,’Nu’))"
+        ],
+        correctAnswer: 0,
+        explanation: "Lệnh này quy định rằng thuộc tính GIOITINH sẽ có giá trị mặc định là 'Nam' nếu không có giá trị nào được chỉ định."
+    },
+//10
+  {
+        question: "Xét quan hệ U= {A, B, C, D, E, G, H} và F = {C -> AB, D -> E, B -> G}.",
+        options: [
+            "Khoá của quan hệ là BAC",
+            "Khóa của quan hệ là EGH",
+            "Khoá của quan hệ là HCD",
+            "Khóa của quan hệ là ABE"
+        ],
+        correctAnswer: 2,
+        explanation: "Khóa HCD là một khóa tối thiểu cho quan hệ U, vì nó có thể xác định tất cả các thuộc tính trong quan hệ."
+    },
+//11
+    {
+        question: "Cho lược đồ α=(U,F) Với U=ABCDEGH F={AB -> CDE, AC -> BCG, BD -> G, ACH -> HE, CG -> BDE}. Các khóa của lược đồ là:",
+        options: [
+            "ABE",
+            "ACG và BDE",
+            "AHB và AHC",
+            "BD và ACH"
+        ],
+        correctAnswer: 2,
+        explanation: "AHB và AHC là các khóa tối thiểu cho lược đồ, vì chúng có thể xác định tất cả các thuộc tính trong lược đồ."
+    },
+//12
+    {
+        question: "Giá trị các thành phần của khoá quy định:",
+        options: [
+            "Có thể nhận giá trị null",
+            "Không thể nhận giá trị null hay các giá trị không xác định",
+            "Có thể nhận giá trị null hay các giá trị không xác định",
+            "Không thể nhận giá trị null nhưng có thể nhận các giá trị không xác định"
+        ],
+        correctAnswer: 1,
+        explanation: "Các thành phần của khóa không được phép có giá trị null hoặc giá trị không xác định để đảm bảo tính duy nhất."
+    },
+//13
+{
+    question: "Cho hai bảng SinhVien(Masv, Hoten, GT, DiaChi, Namsinh, Malop, TenLop) và Diem(Mahp, Tenhp, soTC, Masv, DiemHPLan1, DiemHPLan2). Hãy cho biết câu lệnh truy vấn nào dưới đây chính xác nhất với câu hỏi “Cho biết họ tên của sinh viên, tên lớp của lớp của các sinh viên có điểm trung bình chung tích lũy lần 1 nhỏ nhất”",
+    options: [
+        "Select Hoten, TenLop \n From SinhVien sv inner join Diem d on (d.masv = sv.masv\nGroup by Hoten, Masv\nHaving sum(SoTC* DiemHPLan1)/sum(SoTC) = (Select Min(DiemTBC) From (Select sum(SoTC* DiemHPLan1)/sum(SoTC) as DiemTBC\n From Diem Group by Masv) as temp)",
+        "Select Hoten, TenLop From SinhVien sv inner join Diem d on (d.masv = sv.masv) Group by Hoten, TenLop Having sum(SoTC* DiemHPLan1)/sum(SoTC) = (Select Min(DiemTBC) From (Select sum(SoTC* DiemHPLan1)/sum(SoTC) as DiemTBC From Diem Group by Masv) as temp)",
+        "Select Hoten, TenLop From SinhVien sv inner join Diem d on (d.masv = sv.masv) Group by Hoten, sv.Masv, TenLop Having sum(SoTC* DiemHPLan1)/sum(SoTC) = (Select Min(DiemTBC) From (Select sum(SoTC* DiemHPLan1)/sum(SoTC) as DiemTBC From Diem Group by Masv) as temp)",
+        "Select Top 1 Hoten, TenLop, sum(SoTC* DiemHPLan1)/sum(SoTC) as DiemTBC From SinhVien sv inner join Diem d on (d.masv = sv.masv) Group by Hoten, sv.Masv Order by DiemTBC"
+    ],
+    correctAnswer: 2,
+    explanation: "Câu lệnh này chính xác nhất vì nó nhóm theo Hoten, sv.Masv và TenLop, đảm bảo tính chính xác trong việc tính toán điểm trung bình chung tích lũy."
+},
+//14
+{
+    question: "Cho hai bảng SinhVien(Masv, Hoten, GT, DiaChi, Namsinh, Malop, TenLop) và Diem(Mahp, Tenhp, soTC, Masv, DiemHPLan1, DiemHPLan2). Hãy cho biết câu lệnh truy vấn nào dưới đây chính xác nhất với câu hỏi “Cho biết họ tên của sinh viên có tổng số tín chỉ phải học lại lớn nhất”",
+    options: [
+        "Select Hoten From SinhVien sv inner join Diem d on (d.masv = sv.masv) Where DiemHPLan1 < 5 Group by Hoten, sv.Masv Having sum(SoTC) = (Select Max(TongSoTC) From (Select sum(SoTC) as TongSoTC From Diem d Where DiemHPLan1 < 5 Group by Masv) as temp)",
+        "Select Hoten From SinhVien sv inner join Diem d on (d.masv = sv.masv) Where DiemHPLan2 is null Group by Hoten, sv.Masv Having sum(SoTC) = (Select Max(TongSoTC) From (Select sum(SoTC) as TongSoTC From Diem d Where DiemHPLan1 < 5 Group by Masv) as temp)",
+        "Select Hoten From SinhVien sv inner join Diem d on (d.masv = sv.masv) Where DiemHPLan1 < 5 Group by Hoten, sv.Masv Having sum(SoTC) = (Select Max(TongSoTC) From (Select sum(SoTC) as TongSoTC From Diem d Where DiemHPLan2 is null Group by Masv) as temp)",
+        "Select Top 1 Hoten, sum(SoTC) as TongSoTC From SinhVien sv inner join Diem d on (d.masv = sv.masv) Where DiemHPLan1 < 5 Group by Hoten, sv.Masv Order by TongSoTC Desc"
+    ],
+    correctAnswer: 0,
+    explanation: "Câu lệnh này chính xác nhất vì nó tính tổng số tín chỉ phải học lại dựa trên điểm lần 1 và so sánh với tổng số tín chỉ lớn nhất."
+}
+
+        
+            ]
+        };
+
+        // Quiz variables
+        let currentMode = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let quizSubmitted = false;
+        let startTime = null;
+        let timerInterval = null;
+
+        // DOM elements
+        const chapterModeBtn = document.getElementById('chapterMode');
+        const randomModeBtn = document.getElementById('randomMode');
+        const chapterSelector = document.getElementById('chapterSelector');
+        const chapterSelect = document.getElementById('chapterSelect');
+        const startChapterBtn = document.getElementById('startChapterBtn');
+        const quizContainer = document.getElementById('quizContainer');
+        const questionText = document.getElementById('questionText');
+        const optionsContainer = document.getElementById('optionsContainer');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const result = document.getElementById('result');
+        const resultScore = document.getElementById('resultScore');
+        const resultMessage = document.getElementById('resultMessage');
+        const restartBtn = document.getElementById('restartBtn');
+        const explanation = document.getElementById('explanation');
+        const explanationText = document.getElementById('explanationText');
+        const timer = document.getElementById('timer');
+        const timeDisplay = document.getElementById('timeDisplay');
+
+        // Event listeners
+        chapterModeBtn.addEventListener('click', () => {
+            currentMode = 'chapter';
+            chapterModeBtn.classList.add('active');
+            randomModeBtn.classList.remove('active');
+            chapterSelector.style.display = 'block';
+        });
+
+        randomModeBtn.addEventListener('click', () => {
+            currentMode = 'random';
+            randomModeBtn.classList.add('active');
+            chapterModeBtn.classList.remove('active');
+            chapterSelector.style.display = 'none';
+            startRandomQuiz();
+        });
+
+        startChapterBtn.addEventListener('click', () => {
+            const selectedChapter = chapterSelect.value;
+            if (selectedChapter) {
+                startChapterQuiz(selectedChapter);
+            } else {
+                alert('Vui lòng chọn một chương trước khi bắt đầu');
+            }
+        });
+
+        prevBtn.addEventListener('click', showPreviousQuestion);
+        nextBtn.addEventListener('click', showNextQuestion);
+        submitBtn.addEventListener('click', submitQuiz);
+        restartBtn.addEventListener('click', restartQuiz);
+
+        // Functions
+        function startChapterQuiz(chapter) {
+            currentQuestions = [...questionsDatabase[chapter]];
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            quizSubmitted = false;
+            
+            quizContainer.style.display = 'block';
+            chapterSelector.style.display = 'none';
+            
+            startTimer();
+            showQuestion();
+        }
+
+        function startRandomQuiz() {
+            // Collect all questions from all chapters
+            let allQuestions = [];
+            for (let chapter in questionsDatabase) {
+                allQuestions = allQuestions.concat(questionsDatabase[chapter]);
+            }
+            
+            // Shuffle and select 40 questions (or all if less than 40)
+            allQuestions = shuffleArray(allQuestions);
+            currentQuestions = allQuestions.slice(0, Math.min(40, allQuestions.length));
+            userAnswers = new Array(currentQuestions.length).fill(null);
+            currentQuestionIndex = 0;
+            quizSubmitted = false;
+            
+            quizContainer.style.display = 'block';
+            
+            startTimer();
+            showQuestion();
+        }
+
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        function startTimer() {
+            startTime = new Date();
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        function updateTimer() {
+            const currentTime = new Date();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            const minutes = Math.floor(elapsedTime / 60).toString().padStart(2, '0');
+            const seconds = (elapsedTime % 60).toString().padStart(2, '0');
+            timeDisplay.textContent = `${minutes}:${seconds}`;
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        function showQuestion() {
+            const question = currentQuestions[currentQuestionIndex];
+            questionText.textContent = `Câu ${currentQuestionIndex + 1}: ${question.question}`;
+            
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.classList.add('option');
+                if (quizSubmitted) {
+                    if (index === question.correctAnswer) {
+                        optionElement.classList.add('correct');
+                    } else if (userAnswers[currentQuestionIndex] === index && index !== question.correctAnswer) {
+                        optionElement.classList.add('incorrect');
+                    }
+                } else if (userAnswers[currentQuestionIndex] === index) {
+                    optionElement.classList.add('selected');
+                }
+                
+                const radioSpan = document.createElement('span');
+                radioSpan.classList.add('option-radio');
+                
+                const textSpan = document.createElement('span');
+                textSpan.textContent = option;
+                
+                optionElement.appendChild(radioSpan);
+                optionElement.appendChild(textSpan);
+                
+                if (!quizSubmitted) {
+                    optionElement.addEventListener('click', () => selectOption(index));
+                }
+                
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === currentQuestions.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                submitBtn.style.display = 'none';
+            }
+            
+            // Update progress
+            const progressPercent = ((currentQuestionIndex + 1) / currentQuestions.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            progressText.textContent = `Câu ${currentQuestionIndex + 1}/${currentQuestions.length}`;
+            
+            // Show explanation if quiz is submitted
+            if (quizSubmitted) {
+                explanationText.textContent = question.explanation;
+                explanation.style.display = 'block';
+            } else {
+                explanation.style.display = 'none';
+            }
+            
+            // Hide result when moving to another question
+            result.style.display = 'none';
+        }
+
+        function selectOption(optionIndex) {
+            if (quizSubmitted) return;
+            
+            userAnswers[currentQuestionIndex] = optionIndex;
+            showQuestion();
+        }
+
+        function showNextQuestion() {
+            if (currentQuestionIndex < currentQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+
+        function showPreviousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            quizSubmitted = true;
+            stopTimer();
+            
+            // Calculate score
+            let correctCount = 0;
+            currentQuestions.forEach((question, index) => {
+                if (userAnswers[index] === question.correctAnswer) {
+                    correctCount++;
+                }
+            });
+            
+            const score = Math.round((correctCount / currentQuestions.length) * 100);
+            resultScore.textContent = `${score}%`;
+            
+            // Set result message based on score
+            let message = "";
+            if (score >= 90) {
+                message = "Xuất sắc! Bạn đã nắm vững kiến thức về đại số quan hệ.";
+            } else if (score >= 70) {
+                message = "Tốt! Bạn hiểu khá rõ về đại số quan hệ.";
+            } else if (score >= 50) {
+                message = "Khá! Bạn cần ôn tập thêm một số phần.";
+            } else {
+                message = "Cần cố gắng hơn! Bạn nên xem lại các khái niệm cơ bản.";
+            }
+            
+            resultMessage.textContent = `Bạn đã trả lời đúng ${correctCount} trên ${currentQuestions.length} câu hỏi. ${message}`;
+            
+            // Show result and hide submit button
+            result.style.display = 'block';
+            submitBtn.style.display = 'none';
+            
+            // Show explanation for current question
+            explanationText.textContent = currentQuestions[currentQuestionIndex].explanation;
+            explanation.style.display = 'block';
+            
+            // Scroll to result
+            result.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function restartQuiz() {
+            if (currentMode === 'chapter') {
+                const selectedChapter = chapterSelect.value;
+                if (selectedChapter) {
+                    startChapterQuiz(selectedChapter);
+                }
+            } else {
+                startRandomQuiz();
+            }
+        }
+    </script>
+</body>
+</html>
